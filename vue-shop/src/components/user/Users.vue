@@ -362,6 +362,7 @@ export default {
         return this.$message.error("查询用户信息失败！");
       }
 
+      console.log(res.data);
       this.editForm = res.data;
       this.editDialogVisible = true;
     },
@@ -381,7 +382,8 @@ export default {
             mobile: this.editForm.mobile,
           }
         );
-
+        console.log(this.editForm.id);
+        console.log(res.data);
         if (res.meta.status !== 200) {
           return this.$message.error("更新用户信息失败！");
         }
