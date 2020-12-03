@@ -124,11 +124,16 @@
 
     <!-- 编辑弹框模块 -->
     <el-dialog title="编辑用户" :visible.sync="editDialogVisible" width="50%">
-      <el-form label-width="70px" :model="addForm" ref="addFormRef">
-        <el-form-item label="角色名称">
+      <el-form
+        label-width="90px"
+        :model="addForm"
+        ref="addFormRef"
+        :rules="rules"
+      >
+        <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="addForm.roleName"> </el-input>
         </el-form-item>
-        <el-form-item label="角色描述">
+        <el-form-item label="角色描述" prop="roleDesc">
           <el-input v-model="addForm.roleDesc"></el-input>
         </el-form-item>
       </el-form>
@@ -140,17 +145,22 @@
 
     <!-- 添加角色框 -->
     <el-dialog
-      :model="bddForm"
       title="添加角色"
       width="50%"
       :visible.sync="addDialogVisible"
+      @close="addDialogClosed"
     >
       <!-- 内容主体区域 -->
-      <el-form label-width="90px" :rules="rules">
+      <el-form
+        label-width="90px"
+        :rules="rules"
+        :model="bddForm"
+        ref="addFormRef"
+      >
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="bddForm.roleName"></el-input>
         </el-form-item>
-        <el-form-item label="角色描述" prop="roleName">
+        <el-form-item label="角色描述" prop="roleDesc">
           <el-input v-model="bddForm.roleDesc"></el-input>
         </el-form-item>
       </el-form>
@@ -188,11 +198,16 @@ export default {
       rules: {
         roleName: [
           { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+          { min: 2, max: 7, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        ],
+        roleDesc: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 2, max: 7, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
       },
     };
   },
+
   // 生命周期函数
   created() {
     this.getUserList();
@@ -204,6 +219,9 @@ export default {
       const { data: res } = await this.$http.get("roles");
       if (res.meta.status !== 200) this.$message.error("获取成功！");
       this.roleList = res.data;
+    },
+    addDialogClosed() {
+      this.$refs.addFormRef.resetFields();
     },
     async removeRightById(role, id) {
       const confirmResult = await this.$confirm(
@@ -370,5 +388,8 @@ export default {
 .vcenter {
   display: flex;
   align-items: center;
+}
+.el-form-item__label {
+  margin-right: 10px;
 }
 </style>
